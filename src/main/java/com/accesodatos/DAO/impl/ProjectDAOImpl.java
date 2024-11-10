@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.accesodatos.DAO.ProjectDAO;
@@ -13,8 +14,9 @@ import com.accesodatos.models.Project;
 
 public class ProjectDAOImpl implements ProjectDAO {
 	
-	private static final String SQL_SELECT = "SELECT * FROM projects WHERE ?";
+	private static final String SQL_SELECT = "SELECT * FROM projects WHERE project_id = ?";
 	private static final String SQL_INSERT = "INSERT INTO projects (name, description) VALUES (?,?)";
+	private static final String SQL_SELECT_PROJECTS = "SELECT project_id FROM employee_project WHERE employee_id = ?";
 
 	@Override
 	public Project getById(long idProject) throws SQLException {
@@ -30,15 +32,15 @@ public class ProjectDAOImpl implements ProjectDAO {
 			
 			rs.next();
 			
-			project.setId(rs.getLong("employee_id"));
-			project.setName(rs.getString("first_name"));
-			project.setDescription(rs.getString("last_name"));
+			project.setId(rs.getLong("project_id"));
+			project.setName(rs.getString("name"));
+			project.setDescription(rs.getString("description"));
 			project.setLastUpdate(rs.getTimestamp("last_update"));
 			
 			rs.close();
 			
 		} catch (SQLException e) {
-			throw new SQLException("Coulnd find the employee in database");
+			throw new SQLException("Coulnd find the project in database");
 		}
 		
 		return project;
@@ -46,8 +48,10 @@ public class ProjectDAOImpl implements ProjectDAO {
 
 	@Override
 	public boolean insert(Project project) throws SQLException {
-		try (Connection conn = DBConnection.getInstance().getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
+		
+		Connection conn = DBConnection.getInstance().getConnection();
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
 			
 			pstmt.setString(1, project.getName());
 			pstmt.setString(2, project.getDescription());
@@ -61,14 +65,68 @@ public class ProjectDAOImpl implements ProjectDAO {
 
 	@Override
 	public boolean insert(List<Project> projects) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		Connection conn = DBConnection.getInstance().getConnection();
+		boolean autoCommit = true;
+		
+		try {
+			autoCommit = conn.getAutoCommit();
+			conn.setAutoCommit(false);
+			
+			try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
+				
+				for (Project actor : projects) {
+					pstmt.setString(1, actor.getName());
+					pstmt.setString(2, actor.getDescription());
+					
+					pstmt.addBatch();
+				}
+				
+				pstmt.executeBatch();
+				conn.commit();
+				
+				return true;
+				
+			} 
+			
+		} catch (SQLException e) {
+			
+			if (conn != null && !conn.getAutoCommit()) {
+				conn.rollback();
+			}
+			e.printStackTrace();
+			throw new SQLException("Failed to insert data. Try later!", e);
+			
+		} finally {
+			if (conn != null) {
+				conn.setAutoCommit(autoCommit);
+			}
+		}
 	}
 
 	@Override
 	public List<Project> getProjectsByEmployee(long idEmployee) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<Project> projects = new ArrayList<>();
+		
+		Connection conn = DBConnection.getInstance().getConnection();
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT_PROJECTS)) {
+			
+			pstmt.setLong(1, idEmployee);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				projects.add(getById(rs.getLong("project_id")));
+			}
+			
+			rs.close();
+			
+		} catch (SQLException e) {
+			throw new SQLException("Failed to get projects", e);
+		}
+		
+		return projects;
 	}
 
 }

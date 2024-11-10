@@ -17,6 +17,14 @@ public class Project {
 		this.description = description;
 	}
 
+	public Project(long id, String name, String description, Timestamp lastUpdate) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.lastUpdate = lastUpdate;
+	}
+
 	public long getId() {
 		return id;
 	}

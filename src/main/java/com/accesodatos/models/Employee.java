@@ -1,6 +1,7 @@
 package com.accesodatos.models;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Employee {
@@ -15,6 +16,7 @@ public class Employee {
 	
 	public Employee() {
 		super();
+		this.projects = new ArrayList<>();
 	}
 	
 	public Employee(String firstName, String lastName, String email, double salary) {
@@ -22,6 +24,7 @@ public class Employee {
 		this.lastName = lastName;
 		this.email = email;
 		this.salary = salary;
+		this.projects = new ArrayList<>();
 	}
 
 	public Employee(long id, String firstName, String lastName, String email, double salary, List<Project> projects,
@@ -98,6 +101,43 @@ public class Employee {
 				+ ", salary=" + salary + ", projects=" + projects + ", lastUpdate=" + lastUpdate + "]";
 	}
 
-	
+	public void printInfo() {
+		StringBuilder strb = new StringBuilder();
+		
+		int width = 56;
+		String separator = "-".repeat(width);
+
+		strb.append(separator);
+		strb.append("\n");
+		strb.append(String.format("| %-12s: %-38s |", "ID", id));
+		strb.append("\n");
+		strb.append(String.format("| %-12s: %-38s |", "Nombre", firstName));
+		strb.append("\n");
+		strb.append(String.format("| %-12s: %-38s |", "Apellidos", lastName));
+		strb.append("\n");
+		strb.append(String.format("| %-12s: %-38s |", "Email", email));
+		strb.append("\n");
+		strb.append(String.format("| %-12s: %-38s |", "Salario", salary));
+		strb.append("\n");
+		strb.append(separator);
+		strb.append("\n");
+		
+		if (this.projects != null && !this.projects.isEmpty()) {
+			String title = " PROYECTOS ";
+		    int padding = (width - title.length()) / 2; // Espacio de relleno a cada lado del título
+		    String centeredTitle = "-".repeat(padding) + title + "-".repeat(width - padding - title.length());
+		    
+		    strb.append(centeredTitle);
+		    strb.append("\n");
+			for (Project project : projects) {
+				strb.append(String.format("| %-12s: %-38s |", project.getName(), project.getDescription()));
+				strb.append("\n");
+			}
+			strb.append(separator);
+			strb.append("\n");
+		}
+		
+		System.out.println(strb);
+	}
 	
 }

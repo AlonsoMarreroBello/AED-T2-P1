@@ -12,11 +12,10 @@ import com.accesodatos.models.Employee;
 public class EmployeeDAOImpl implements EmployeeDAO {
 	
 	private static final String SQL_SELECT = "SELECT * FROM employees WHERE employee_id  = ?";
-	private static final String SQL_INSERT = """
-			INSERT INTO employees (first_name, last_name, email, salary) VALUES (?,?,?,?)
-			""";
-	private static final String SQL_UPDATE = "UPDATE employees SET first_name = ? , last_name = ? , email = ? , salary = ? WHERE employee_id = ?" ;
+	private static final String SQL_INSERT = "INSERT INTO employees (first_name, last_name, email, salary) VALUES (?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE employees SET first_name = ? , last_name = ? , email = ? , salary = ? WHERE employee_id = ?";
 	private static final String SQL_DELETE = "DELETE FROM employees WHERE employee_id = ?";
+	private static final String SQL_ADD_PROJECT = "INSERT INTO employee_project (employee_id, project_id) VALUES (?,?)";
 
 	@Override
 	public Employee getById(long idEmployee) throws SQLException {
@@ -102,8 +101,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@Override
 	public boolean AddProjectToEmployee(long idEmployee, long idProject) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+
+		Connection conn = DBConnection.getInstance().getConnection();
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(SQL_ADD_PROJECT);) {
+			
+			pstmt.setLong(1, idEmployee);
+			pstmt.setLong(2, idProject);
+			
+			return pstmt.executeUpdate() > 0; 
+			
+		} catch (SQLException e) {
+			throw new SQLException("Failed to insert data. Try later!", e);
+		}
 	}
 
 }
