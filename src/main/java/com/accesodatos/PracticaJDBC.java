@@ -13,9 +13,9 @@ import com.accesodatos.services.ProjectService;
 
 public class PracticaJDBC {
 
-	static EmployeeService EMPLOYEE_SERVICE = new EmployeeService();
-	static ProjectService PROJECT_SERVICE = new ProjectService();
-	final static Scanner SCANNER = new Scanner(System.in);
+	private static EmployeeService EMPLOYEE_SERVICE = new EmployeeService();
+	private static ProjectService PROJECT_SERVICE = new ProjectService();
+	private final static Scanner SCANNER = new Scanner(System.in);
 
 	private static Employee doesEmployeeExists(Long idEmployee) {
 
@@ -121,7 +121,6 @@ public class PracticaJDBC {
 
 		} catch (SQLException e) {
 			System.err.println("Empleado no encontrado");
-			e.printStackTrace();
 		}
 	}
 
@@ -186,19 +185,16 @@ public class PracticaJDBC {
 			employee = doesEmployeeExists(idEmployee);
 		}
 		
-		while (idEmployee != 0) {
+		while (true) {
 
 			System.out.print("Introduzca el ID del projecto (0 para salir) : ");
 			idProject = SCANNER.nextLong();
 			
-			if (idProject == (long) 0) {
+			if (idProject == 0) {
 				break;
 			}
 
 			try {
-
-				System.out.println("Empleado:" + idEmployee);
-				System.out.println("Projecto:" + idProject);
 
 				EMPLOYEE_SERVICE.addProjectToEmployee(idEmployee, idProject);
 				System.out.println("Proyecto registrado correctamente al empleado");
@@ -224,19 +220,81 @@ public class PracticaJDBC {
 		try {
 			PROJECT_SERVICE.createProject(projects);
 			System.out.println("Los proyectos se han creado correctamente.");
-		    System.out.println("Pulse una tecla para continuar hacia el menú principal...");
 		} catch (SQLException e) {
 			System.err.println("No se han podido añadir los proyectos");
 		}
 	}
+	
+	public static void printMenu() {
+		
+		String message = """
+				╔════Opciones════════════════════════════════════════╗
+				║ 1.- Añadir nuevo empleado                          ║		
+				║ 2.- Modificar empleado                             ║
+				║ 3.- Buscar empleado                                ║
+				║ 4.- Eliminar empleado                              ║
+				║ 5.- Añadir nuevo proyecto                          ║
+				║ 6.- Añadir proyecto a un empleado                  ║
+				║ 7.- Batch de datos                                 ║
+				║ 8.- Terminar el programa                           ║
+				╚════════════════════════════════════════════════════╝
+				Introduzca una opción del 1 al 8""";
+		System.out.println(message);
+	}
+	
+	static void askToContinue() {
+		System.out.println("Pulsa enter para continuar...");
+		SCANNER.nextLine();
+	}
 
 	public static void main(String[] args) {
-		// addEmployee();
-		// updateEmployee();
-		searchEmployee();
-		// deleteEmployee();
-		// addProject();
-		// addProjectToEmployee();
-		// batchInsertProjects();
+		while (true) {
+			printMenu();
+			String key = SCANNER.nextLine();
+			switch (key) {
+			case "1": {
+				addEmployee();
+				askToContinue();
+				break;
+			}
+			case "2": {
+				updateEmployee();
+				askToContinue();
+				break;
+			}
+			case "3": {
+				searchEmployee();
+				askToContinue();
+				SCANNER.nextLine();
+				break;
+			}
+			case "4": {
+				deleteEmployee();
+				askToContinue();
+				break;
+			}
+			case "5": {
+				addProject();
+				askToContinue();
+				break;
+			}
+			case "6": {
+				addProjectToEmployee();
+				askToContinue();
+				break;
+			}
+			case "7": {
+				batchInsertProjects();
+				askToContinue();
+				break;
+			}
+			case "8": {
+				break;
+			}
+			default:
+				
+			}
+			
+		}
 	}
 }

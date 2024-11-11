@@ -21,7 +21,7 @@ public class ProjectDAOImpl implements ProjectDAO {
 	@Override
 	public Project getById(long idProject) throws SQLException {
 		
-		Project project = new Project();
+		Project project = null;
 		Connection conn = DBConnection.getInstance().getConnection();
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT)) {
@@ -30,12 +30,14 @@ public class ProjectDAOImpl implements ProjectDAO {
 			
 			ResultSet rs = pstmt.executeQuery();
 			
-			rs.next();
 			
-			project.setId(rs.getLong("project_id"));
-			project.setName(rs.getString("name"));
-			project.setDescription(rs.getString("description"));
-			project.setLastUpdate(rs.getTimestamp("last_update"));
+			if (rs.next()) {
+				project = new Project();
+				project.setId(rs.getLong("project_id"));
+				project.setName(rs.getString("name"));
+				project.setDescription(rs.getString("description"));
+				project.setLastUpdate(rs.getTimestamp("last_update"));								
+			}
 			
 			rs.close();
 			

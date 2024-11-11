@@ -35,10 +35,7 @@ public class EmployeeService {
 
 	public boolean addProjectToEmployee(long idEmployee, long idProject) throws SQLException, ProjectNotFoundExeption {
 
-		try {
-			projectDAO.getById(idProject);
-		} catch (SQLException e) {
-			System.out.println("err");
+		if (projectDAO.getById(idProject) == null) {
 			throw new ProjectNotFoundExeption(idProject);
 		}
 

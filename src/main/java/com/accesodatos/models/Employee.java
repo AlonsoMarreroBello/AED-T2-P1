@@ -105,35 +105,34 @@ public class Employee {
 		StringBuilder strb = new StringBuilder();
 		
 		int width = 56;
-		String separator = "-".repeat(width);
 
-		strb.append(separator);
+		strb.append("╔" + "═".repeat(width-2) + "╗");
 		strb.append("\n");
-		strb.append(String.format("| %-12s: %-38s |", "ID", id));
+		strb.append(String.format("║ %-12s: %-38s ║", "ID", id));
 		strb.append("\n");
-		strb.append(String.format("| %-12s: %-38s |", "Nombre", firstName));
+		strb.append(String.format("║ %-12s: %-38s ║", "Nombre", firstName));
 		strb.append("\n");
-		strb.append(String.format("| %-12s: %-38s |", "Apellidos", lastName));
+		strb.append(String.format("║ %-12s: %-38s ║", "Apellidos", lastName));
 		strb.append("\n");
-		strb.append(String.format("| %-12s: %-38s |", "Email", email));
+		strb.append(String.format("║ %-12s: %-38s ║", "Email", email));
 		strb.append("\n");
-		strb.append(String.format("| %-12s: %-38s |", "Salario", salary));
+		strb.append(String.format("║ %-12s: %-38s ║", "Salario", salary));
 		strb.append("\n");
-		strb.append(separator);
+		strb.append("╚" + "═".repeat(width-2) + "╝");
 		strb.append("\n");
 		
 		if (this.projects != null && !this.projects.isEmpty()) {
 			String title = " PROYECTOS ";
 		    int padding = (width - title.length()) / 2; // Espacio de relleno a cada lado del título
-		    String centeredTitle = "-".repeat(padding) + title + "-".repeat(width - padding - title.length());
+		    String centeredTitle = "╔" + "═".repeat(padding-1) + title + "═".repeat(width - padding - title.length() -1) + "╗";
 		    
 		    strb.append(centeredTitle);
 		    strb.append("\n");
 			for (Project project : projects) {
-				strb.append(String.format("| %-12s: %-38s |", project.getName(), project.getDescription()));
+				strb.append(String.format("║ %-12s: %-38s ║", project.getName(), project.getDescription()));
 				strb.append("\n");
 			}
-			strb.append(separator);
+			strb.append("╚" + "═".repeat(width-2) + "╝");
 			strb.append("\n");
 		}
 		
