@@ -81,7 +81,7 @@ public class PracticaJDBC {
 		try {
 
 			Employee employee = doesEmployeeExists(idEmployee);
-			System.out.println(employee.toString());
+			employee.printInfo();
 
 			Employee newEmployee = askEmployeeData();
 
@@ -121,6 +121,7 @@ public class PracticaJDBC {
 
 		} catch (SQLException e) {
 			System.err.println("Empleado no encontrado");
+			e.printStackTrace();
 		}
 	}
 
@@ -167,6 +168,7 @@ public class PracticaJDBC {
 			System.out.println("Proyecto añadido");
 		} catch (SQLException e) {
 			System.err.println("No se ha podido añadir el proyecto.");
+			e.printStackTrace();
 		}
 	}
 
@@ -289,6 +291,7 @@ public class PracticaJDBC {
 				break;
 			}
 			case "8": {
+				System.exit(0);
 				break;
 			}
 			default:

@@ -48,13 +48,13 @@ public class DBConnection {
 	}
 	
 	public static DBConnection getInstance() throws SQLException {
-		if (instance == null) {
+		if (instance == null || instance.getConnection().isClosed()) {
 			instance = new DBConnection();
 		}
 		return instance;
 	}
 	
-	public Connection getConnection() {
+	public Connection getConnection() throws SQLException {
 		return connection;
 	}	
 	

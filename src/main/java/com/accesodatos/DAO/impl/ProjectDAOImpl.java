@@ -16,15 +16,17 @@ public class ProjectDAOImpl implements ProjectDAO {
 	
 	private static final String SQL_SELECT = "SELECT * FROM projects WHERE project_id = ?";
 	private static final String SQL_INSERT = "INSERT INTO projects (name, description) VALUES (?,?)";
-	private static final String SQL_SELECT_PROJECTS = "SELECT project_id FROM employee_project WHERE employee_id = ?";
+	private static final String SQL_SELECT_PROJECTS = """
+			SELECT e.project_id, p.name, p.description, p.last_update FROM employee_project e INNER JOIN projects p USING (project_id) WHERE employee_id = ?
+			""";
 
 	@Override
 	public Project getById(long idProject) throws SQLException {
 		
 		Project project = null;
-		Connection conn = DBConnection.getInstance().getConnection();
 		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT)) {
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT)) {
 			
 			pstmt.setLong(1, idProject);
 			
@@ -51,9 +53,8 @@ public class ProjectDAOImpl implements ProjectDAO {
 	@Override
 	public boolean insert(Project project) throws SQLException {
 		
-		Connection conn = DBConnection.getInstance().getConnection();
-		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
 			
 			pstmt.setString(1, project.getName());
 			pstmt.setString(2, project.getDescription());
@@ -67,6 +68,7 @@ public class ProjectDAOImpl implements ProjectDAO {
 
 	@Override
 	public boolean insert(List<Project> projects) throws SQLException {
+		
 		Connection conn = DBConnection.getInstance().getConnection();
 		boolean autoCommit = true;
 		
@@ -110,16 +112,16 @@ public class ProjectDAOImpl implements ProjectDAO {
 		
 		List<Project> projects = new ArrayList<>();
 		
-		Connection conn = DBConnection.getInstance().getConnection();
-		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT_PROJECTS)) {
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT_PROJECTS)) {
 			
 			pstmt.setLong(1, idEmployee);
 			
 			ResultSet rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
-				projects.add(getById(rs.getLong("project_id")));
+				projects.add(new Project(
+						rs.getLong("project_id"), rs.getString("name"), rs.getString("description"), rs.getTimestamp("last_update")));
 			}
 			
 			rs.close();

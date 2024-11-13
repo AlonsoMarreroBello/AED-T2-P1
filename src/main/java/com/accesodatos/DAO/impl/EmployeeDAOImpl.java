@@ -20,23 +20,24 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public Employee getById(long idEmployee) throws SQLException {
 		
-		Employee employee = new Employee();
-		Connection conn = DBConnection.getInstance().getConnection();
+		Employee employee = null;
 		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT)) {
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT)) {
 			
 			pstmt.setLong(1, idEmployee);
 			
 			ResultSet rs = pstmt.executeQuery();
 			
-			rs.next();
-			
-			employee.setId(rs.getLong("employee_id"));
-			employee.setFirstName(rs.getString("first_name"));
-			employee.setLastName(rs.getString("last_name"));
-			employee.setEmail(rs.getString("email"));
-			employee.setSalary(rs.getDouble("salary"));
-			employee.setLastUpdate(rs.getTimestamp("last_update"));
+			if (rs.next()) {
+				employee = new Employee();
+				employee.setId(rs.getLong("employee_id"));
+				employee.setFirstName(rs.getString("first_name"));
+				employee.setLastName(rs.getString("last_name"));
+				employee.setEmail(rs.getString("email"));
+				employee.setSalary(rs.getDouble("salary"));
+				employee.setLastUpdate(rs.getTimestamp("last_update"));
+			}
 			
 			rs.close();
 			
@@ -49,8 +50,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@Override
 	public boolean insert(Employee employee) throws SQLException {
+		
 		try (Connection conn = DBConnection.getInstance().getConnection();
-				PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
 			
 			pstmt.setString(1, employee.getFirstName());
 			pstmt.setString(2, employee.getLastName());
@@ -67,9 +69,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public boolean update(long idEmployee, Employee employee) throws SQLException {
 		
-		Connection conn = DBConnection.getInstance().getConnection();
 		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_UPDATE);) {
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_UPDATE);) {
 			
 			pstmt.setString(1, employee.getFirstName());
 			pstmt.setString(2, employee.getLastName());
@@ -86,9 +88,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@Override
 	public boolean delete(long idEmployee) throws SQLException {
-		Connection conn = DBConnection.getInstance().getConnection();
 		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_DELETE);) {
+		
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_DELETE);) {
 			
 			pstmt.setLong(1, idEmployee);
 			
@@ -102,9 +105,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public boolean AddProjectToEmployee(long idEmployee, long idProject) throws SQLException {
 
-		Connection conn = DBConnection.getInstance().getConnection();
 		
-		try (PreparedStatement pstmt = conn.prepareStatement(SQL_ADD_PROJECT);) {
+		
+		try (Connection conn = DBConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(SQL_ADD_PROJECT);) {
 			
 			pstmt.setLong(1, idEmployee);
 			pstmt.setLong(2, idProject);

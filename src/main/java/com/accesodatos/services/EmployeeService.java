@@ -8,7 +8,6 @@ import com.accesodatos.DAO.impl.EmployeeDAOImpl;
 import com.accesodatos.DAO.impl.ProjectDAOImpl;
 import com.accesodatos.exceptions.ProjectNotFoundExeption;
 import com.accesodatos.models.Employee;
-import com.accesodatos.models.Project;
 
 public class EmployeeService {
 
@@ -17,6 +16,7 @@ public class EmployeeService {
 
 	public Employee getEmployee(long idEmployee) throws SQLException {
 		Employee employee = employeeDAO.getById(idEmployee);
+		// comprobar empleado
 		employee.setProjects(projectDAO.getProjectsByEmployee(idEmployee));
 		return employee;
 	}
