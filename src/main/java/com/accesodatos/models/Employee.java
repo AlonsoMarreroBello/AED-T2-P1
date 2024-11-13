@@ -104,19 +104,19 @@ public class Employee {
 	public void printInfo() {
 		StringBuilder strb = new StringBuilder();
 		
-		int width = 56;
+		int width = 71;
 
 		strb.append("╔" + "═".repeat(width-2) + "╗");
 		strb.append("\n");
-		strb.append(String.format("║ %-12s: %-38s ║", "ID", id));
+		strb.append(String.format("║ %-15s: %-50s ║", "ID", id));
 		strb.append("\n");
-		strb.append(String.format("║ %-12s: %-38s ║", "Nombre", firstName));
+		strb.append(String.format("║ %-15s: %-50s ║", "Nombre", firstName));
 		strb.append("\n");
-		strb.append(String.format("║ %-12s: %-38s ║", "Apellidos", lastName));
+		strb.append(String.format("║ %-15s: %-50s ║", "Apellidos", lastName));
 		strb.append("\n");
-		strb.append(String.format("║ %-12s: %-38s ║", "Email", email));
+		strb.append(String.format("║ %-15s: %-50s ║", "Email", email));
 		strb.append("\n");
-		strb.append(String.format("║ %-12s: %-38s ║", "Salario", salary));
+		strb.append(String.format("║ %-15s: %-50s ║", "Salario", salary));
 		strb.append("\n");
 		strb.append("╚" + "═".repeat(width-2) + "╝");
 		strb.append("\n");
@@ -129,7 +129,7 @@ public class Employee {
 		    strb.append(centeredTitle);
 		    strb.append("\n");
 			for (Project project : projects) {
-				strb.append(String.format("║ %-12s: %-38s ║", project.getName(), project.getDescription()));
+				strb.append(String.format("║ %-15s: %-50s ║", project.getName(), project.getDescription()));
 				strb.append("\n");
 			}
 			strb.append("╚" + "═".repeat(width-2) + "╝");

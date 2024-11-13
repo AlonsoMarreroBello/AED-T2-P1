@@ -17,6 +17,9 @@ public class EmployeeService {
 	public Employee getEmployee(long idEmployee) throws SQLException {
 		Employee employee = employeeDAO.getById(idEmployee);
 		// comprobar empleado
+		if (employee == null) {
+			throw new SQLException("Employee not found");
+		}
 		employee.setProjects(projectDAO.getProjectsByEmployee(idEmployee));
 		return employee;
 	}

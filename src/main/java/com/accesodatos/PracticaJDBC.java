@@ -17,7 +17,13 @@ public class PracticaJDBC {
 	private static ProjectService PROJECT_SERVICE = new ProjectService();
 	private final static Scanner SCANNER = new Scanner(System.in);
 
-	private static Employee doesEmployeeExists(Long idEmployee) {
+	/**
+	 * This method tries to get an employee by its id. 
+	 * If exists returns the employe, else prints an error message
+	 * @param idEmployee The id of the employee
+	 * @return returns a employee if found or null
+	 */
+	private static Employee doesEmployeeExists(long idEmployee) {
 
 		Employee employee = null;
 
@@ -31,7 +37,11 @@ public class PracticaJDBC {
 
 		return employee;
 	}
-
+	
+	/**
+	 * Asks the data for creating a new Employee
+	 * @return an Employee with the data given by the user
+	 */
 	private static Employee askEmployeeData() {
 		System.out.print("Introduzca el nombre: ");
 		String name = SCANNER.nextLine();
@@ -121,7 +131,6 @@ public class PracticaJDBC {
 
 		} catch (SQLException e) {
 			System.err.println("Empleado no encontrado");
-			e.printStackTrace();
 		}
 	}
 
@@ -168,7 +177,6 @@ public class PracticaJDBC {
 			System.out.println("Proyecto añadido");
 		} catch (SQLException e) {
 			System.err.println("No se ha podido añadir el proyecto.");
-			e.printStackTrace();
 		}
 	}
 
