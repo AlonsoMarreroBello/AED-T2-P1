@@ -69,7 +69,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public boolean update(long idEmployee, Employee employee) throws SQLException {
 		
-		
 		try (Connection conn = DBConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(SQL_UPDATE);) {
 			
@@ -89,7 +88,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public boolean delete(long idEmployee) throws SQLException {
 		
-		
 		try (Connection conn = DBConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(SQL_DELETE);) {
 			
@@ -105,8 +103,6 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public boolean AddProjectToEmployee(long idEmployee, long idProject) throws SQLException {
 
-		
-		
 		try (Connection conn = DBConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(SQL_ADD_PROJECT);) {
 			

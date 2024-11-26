@@ -4,8 +4,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The `Employee` class represents an employee entity with attributes such as
+ * ID, name, email, salary,
+ * projects, and last update timestamp, along with methods for setting and
+ * getting these attributes and
+ * printing employee information.
+ */
 public class Employee {
-	
+
 	private long id;
 	private String firstName;
 	private String lastName;
@@ -13,12 +20,12 @@ public class Employee {
 	private double salary;
 	private List<Project> projects;
 	private Timestamp lastUpdate;
-	
+
 	public Employee() {
 		super();
 		this.projects = new ArrayList<>();
 	}
-	
+
 	public Employee(String firstName, String lastName, String email, double salary) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -37,7 +44,6 @@ public class Employee {
 		this.projects = projects;
 		this.lastUpdate = lastUpdate;
 	}
-
 
 	public long getId() {
 		return id;
@@ -101,42 +107,35 @@ public class Employee {
 				+ ", salary=" + salary + ", projects=" + projects + ", lastUpdate=" + lastUpdate + "]";
 	}
 
+	/**
+	 * The `printInfo` function generates and prints formatted information about an
+	 * employee, including
+	 * their ID, name, email, salary, and projects.
+	 */
 	public void printInfo() {
 		StringBuilder strb = new StringBuilder();
-		
+
 		int width = 71;
 
-		strb.append("╔" + "═".repeat(width-2) + "╗");
-		strb.append("\n");
-		strb.append(String.format("║ %-15s: %-50s ║", "ID", id));
-		strb.append("\n");
-		strb.append(String.format("║ %-15s: %-50s ║", "Nombre", firstName));
-		strb.append("\n");
-		strb.append(String.format("║ %-15s: %-50s ║", "Apellidos", lastName));
-		strb.append("\n");
-		strb.append(String.format("║ %-15s: %-50s ║", "Email", email));
-		strb.append("\n");
-		strb.append(String.format("║ %-15s: %-50s ║", "Salario", salary));
-		strb.append("\n");
-		strb.append("╚" + "═".repeat(width-2) + "╝");
-		strb.append("\n");
-		
+		strb.append("╔" + "═".repeat(width - 2) + "╗\n");
+		strb.append(String.format("║ %-15s: %-50s ║\n", "ID", id));
+		strb.append(String.format("║ %-15s: %-50s ║\n", "Nombre", firstName));
+		strb.append(String.format("║ %-15s: %-50s ║\n", "Apellidos", lastName));
+		strb.append(String.format("║ %-15s: %-50s ║\n", "Email", email));
+		strb.append(String.format("║ %-15s: %-50s ║\n", "Salario", salary));
+		strb.append("╚" + "═".repeat(width - 2) + "╝\n");
+
 		if (this.projects != null && !this.projects.isEmpty()) {
 			String title = " PROYECTOS ";
-		    int padding = (width - title.length()) / 2; // Espacio de relleno a cada lado del título
-		    String centeredTitle = "╔" + "═".repeat(padding-1) + title + "═".repeat(width - padding - title.length() -1) + "╗";
-		    
-		    strb.append(centeredTitle);
-		    strb.append("\n");
+			int padding = (width - title.length()) / 2;
+
+			strb.append("╔" + "═".repeat(padding - 1) + title + "═".repeat(width - padding - title.length() - 1) + "╗\n");
 			for (Project project : projects) {
-				strb.append(String.format("║ %-15s: %-50s ║", project.getName(), project.getDescription()));
-				strb.append("\n");
+				strb.append(String.format("║ %-15s: %-50s ║\n", project.getName(), project.getDescription()));
 			}
-			strb.append("╚" + "═".repeat(width-2) + "╝");
-			strb.append("\n");
+			strb.append("╚" + "═".repeat(width - 2) + "╝\n");
 		}
-		
 		System.out.println(strb);
 	}
-	
+
 }

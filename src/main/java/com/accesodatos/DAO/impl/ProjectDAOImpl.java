@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.accesodatos.DAO.ProjectDAO;
 import com.accesodatos.db.DBConnection;
-import com.accesodatos.models.Employee;
 import com.accesodatos.models.Project;
 
 public class ProjectDAOImpl implements ProjectDAO {
@@ -31,7 +30,6 @@ public class ProjectDAOImpl implements ProjectDAO {
 			pstmt.setLong(1, idProject);
 			
 			ResultSet rs = pstmt.executeQuery();
-			
 			
 			if (rs.next()) {
 				project = new Project();
@@ -69,18 +67,17 @@ public class ProjectDAOImpl implements ProjectDAO {
 	@Override
 	public boolean insert(List<Project> projects) throws SQLException {
 		
-		Connection conn = DBConnection.getInstance().getConnection();
 		boolean autoCommit = true;
 		
-		try {
+		try (Connection conn = DBConnection.getInstance().getConnection();) {
 			autoCommit = conn.getAutoCommit();
 			conn.setAutoCommit(false);
 			
 			try (PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT)) {
 				
-				for (Project actor : projects) {
-					pstmt.setString(1, actor.getName());
-					pstmt.setString(2, actor.getDescription());
+				for (Project project : projects) {
+					pstmt.setString(1, project.getName());
+					pstmt.setString(2, project.getDescription());
 					
 					pstmt.addBatch();
 				}
@@ -90,20 +87,21 @@ public class ProjectDAOImpl implements ProjectDAO {
 				
 				return true;
 				
-			} 
-			
+			} catch (SQLException e) {
+				
+				if (conn != null && !conn.getAutoCommit()) {
+					conn.rollback();
+				}
+				
+				e.printStackTrace();
+				throw new SQLException("Failed to insert data. Try later!", e);
+			} finally {
+				if (conn != null) {
+					conn.setAutoCommit(autoCommit);
+				}
+			}
 		} catch (SQLException e) {
-			
-			if (conn != null && !conn.getAutoCommit()) {
-				conn.rollback();
-			}
-			e.printStackTrace();
-			throw new SQLException("Failed to insert data. Try later!", e);
-			
-		} finally {
-			if (conn != null) {
-				conn.setAutoCommit(autoCommit);
-			}
+			throw new SQLException("Cant insert data. Try again later !!!");
 		}
 	}
 

@@ -2,13 +2,18 @@ package com.accesodatos.models;
 
 import java.sql.Timestamp;
 
+/**
+ * The `Project` class represents a project entity with properties such as id,
+ * name, description, and
+ * last update timestamp.
+ */
 public class Project {
 
 	private long id;
 	private String name;
 	private String description;
 	private Timestamp lastUpdate;
-	
+
 	public Project() {
 	}
 
@@ -62,6 +67,5 @@ public class Project {
 		return "Project [id=" + id + ", name=" + name + ", description=" + description + ", lastUpdate=" + lastUpdate
 				+ "]";
 	}
-	
-	
+
 }

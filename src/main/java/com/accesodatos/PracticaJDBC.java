@@ -18,10 +18,18 @@ public class PracticaJDBC {
 	private final static Scanner SCANNER = new Scanner(System.in);
 
 	/**
-	 * This method tries to get an employee by its id. 
-	 * If exists returns the employe, else prints an error message
-	 * @param idEmployee The id of the employee
-	 * @return returns a employee if found or null
+	 * The function `doesEmployeeExists` checks if an employee with a given ID
+	 * exists in the database and
+	 * returns the employee object if found.
+	 * 
+	 * @param idEmployee The `idEmployee` parameter is a unique identifier used to
+	 *                   search for an employee
+	 *                   in the database. The method `doesEmployeeExists` attempts
+	 *                   to retrieve an employee with the given
+	 *                   `idEmployee` from the database using the
+	 *                   `EMPLOYEE_SERVICE.getEmployee(idEmployee)` method. If the
+	 *                   employee is found
+	 * @return The method `doesEmployeeExists` is returning an `Employee` object.
 	 */
 	private static Employee doesEmployeeExists(long idEmployee) {
 
@@ -37,10 +45,17 @@ public class PracticaJDBC {
 
 		return employee;
 	}
-	
+
 	/**
-	 * Asks the data for creating a new Employee
-	 * @return an Employee with the data given by the user
+	 * The function `askEmployeeData` prompts the user to input employee information
+	 * such as name, last
+	 * name, email, and salary, ensuring that a valid salary is entered before
+	 * creating and returning an
+	 * `Employee` object.
+	 * 
+	 * @return An Employee object with the data provided by the user, including
+	 *         name, last name, email,
+	 *         and salary.
 	 */
 	private static Employee askEmployeeData() {
 		System.out.print("Introduzca el nombre: ");
@@ -59,7 +74,7 @@ public class PracticaJDBC {
 				salary = Double.parseDouble(salary_str);
 
 			} catch (Exception e) {
-				System.out.println("Intoduzca un salario valido. ej: 1300");
+				System.err.println("Intoduzca un salario valido. ej: 1300");
 			}
 			if (salary != -1) {
 				keepAsking = false;
@@ -70,6 +85,11 @@ public class PracticaJDBC {
 
 	}
 
+	/**
+	 * The function `addEmployee` adds a new employee by getting employee data and
+	 * creating the employee
+	 * using a service, handling any SQL exceptions.
+	 */
 	static void addEmployee() {
 
 		Employee employee = askEmployeeData();
@@ -82,6 +102,13 @@ public class PracticaJDBC {
 		}
 	}
 
+	/**
+	 * The function `updateEmployee` prompts the user to input an employee ID,
+	 * retrieves the existing
+	 * employee data, allows the user to update the employee information, and then
+	 * updates the employee
+	 * record in the database.
+	 */
 	static void updateEmployee() {
 
 		System.out.println("Introduzca el ID:");
@@ -119,6 +146,13 @@ public class PracticaJDBC {
 
 	}
 
+	/**
+	 * The `searchEmployee` function prompts the user to input an employee ID,
+	 * retrieves the employee
+	 * information from a service, and prints the employee details, handling a
+	 * SQLException if the
+	 * employee is not found.
+	 */
 	static void searchEmployee() {
 		try {
 
@@ -134,6 +168,12 @@ public class PracticaJDBC {
 		}
 	}
 
+	/**
+	 * The function `deleteEmployee` prompts the user to enter an employee ID,
+	 * checks if the employee
+	 * exists, confirms deletion with the user, and then deletes the employee if
+	 * confirmed.
+	 */
 	static void deleteEmployee() {
 
 		try {
@@ -143,7 +183,7 @@ public class PracticaJDBC {
 
 			Employee employee = doesEmployeeExists(idEmployee);
 
-			System.out.println(employee.toString());
+			employee.printInfo();
 			System.out.print("Esta seguro de quere eliminar al empleado ? (Y/N)");
 			SCANNER.nextLine();
 
@@ -163,6 +203,13 @@ public class PracticaJDBC {
 		}
 	}
 
+	/**
+	 * The `addProject` function prompts the user to input a name and description
+	 * for a project, creates a
+	 * new `Project` object, and attempts to add it to a database using
+	 * `PROJECT_SERVICE.createProject`,
+	 * handling any potential `SQLException` that may occur.
+	 */
 	static void addProject() {
 
 		System.out.print("Introduzca el nombre: ");
@@ -180,26 +227,31 @@ public class PracticaJDBC {
 		}
 	}
 
+	/**
+	 * The function `addProjectToEmployee` allows a user to associate a project with
+	 * an employee by
+	 * entering their respective IDs.
+	 */
 	static void addProjectToEmployee() {
 
 		long idEmployee = (long) -1;
 		long idProject = (long) -1;
 		Employee employee = null;
-		
+
 		while (employee == null) {
 			System.out.print("Introduzca el ID del empleado (0 para salir) : ");
 			idEmployee = SCANNER.nextLong();
-			if (idEmployee == (long) 0) {
+			if (idEmployee == 0) {
 				break;
 			}
 			employee = doesEmployeeExists(idEmployee);
 		}
-		
-		while (true) {
+
+		while (employee != null) {
 
 			System.out.print("Introduzca el ID del projecto (0 para salir) : ");
 			idProject = SCANNER.nextLong();
-			
+
 			if (idProject == 0) {
 				break;
 			}
@@ -213,14 +265,19 @@ public class PracticaJDBC {
 				System.err.println("El proyecto con ID " + idProject + " no existe en la base de datos.");
 			} catch (SQLException e) {
 				System.err.println("No se ha podido añadir el proyecto");
-			} 
+			}
 		}
 	}
 
+	/**
+	 * The function `batchInsertProjects` creates a list of projects and attempts to
+	 * insert them into a
+	 * database using a service, handling any potential SQL exceptions.
+	 */
 	static void batchInsertProjects() {
 
 		List<Project> projects = new ArrayList<>();
-		
+
 		projects.add(new Project("batch_1", "Descripcion batch_1"));
 		projects.add(new Project("batch_2", "Descripcion batch_2"));
 		projects.add(new Project("batch_3", "Descripcion batch_3"));
@@ -234,12 +291,15 @@ public class PracticaJDBC {
 			System.err.println("No se han podido añadir los proyectos");
 		}
 	}
-	
+
+	/**
+	 * The `printMenu` function displays a menu with options for managing employees
+	 * and projects.
+	 */
 	public static void printMenu() {
-		
 		String message = """
 				╔════Opciones════════════════════════════════════════╗
-				║ 1.- Añadir nuevo empleado                          ║		
+				║ 1.- Añadir nuevo empleado                          ║
 				║ 2.- Modificar empleado                             ║
 				║ 3.- Buscar empleado                                ║
 				║ 4.- Eliminar empleado                              ║
@@ -251,7 +311,11 @@ public class PracticaJDBC {
 				Introduzca una opción del 1 al 8""";
 		System.out.println(message);
 	}
-	
+
+	/**
+	 * The function `askToContinue` prompts the user to press Enter to continue and
+	 * waits for user input.
+	 */
 	static void askToContinue() {
 		System.out.println("Pulsa enter para continuar...");
 		SCANNER.nextLine();
@@ -262,50 +326,51 @@ public class PracticaJDBC {
 			printMenu();
 			String key = SCANNER.nextLine();
 			switch (key) {
-			case "1": {
-				addEmployee();
-				askToContinue();
-				break;
+				case "1": {
+					addEmployee();
+					askToContinue();
+					break;
+				}
+				case "2": {
+					updateEmployee();
+					askToContinue();
+					break;
+				}
+				case "3": {
+					searchEmployee();
+					askToContinue();
+					SCANNER.nextLine();
+					break;
+				}
+				case "4": {
+					deleteEmployee();
+					askToContinue();
+					break;
+				}
+				case "5": {
+					addProject();
+					askToContinue();
+					break;
+				}
+				case "6": {
+					addProjectToEmployee();
+					askToContinue();
+					break;
+				}
+				case "7": {
+					batchInsertProjects();
+					askToContinue();
+					break;
+				}
+				case "8": {
+					System.out.println("Gracias por usar nuestra app.");
+					askToContinue();
+					System.exit(0);
+					break;
+				}
+				default:
+					System.err.println();
 			}
-			case "2": {
-				updateEmployee();
-				askToContinue();
-				break;
-			}
-			case "3": {
-				searchEmployee();
-				askToContinue();
-				SCANNER.nextLine();
-				break;
-			}
-			case "4": {
-				deleteEmployee();
-				askToContinue();
-				break;
-			}
-			case "5": {
-				addProject();
-				askToContinue();
-				break;
-			}
-			case "6": {
-				addProjectToEmployee();
-				askToContinue();
-				break;
-			}
-			case "7": {
-				batchInsertProjects();
-				askToContinue();
-				break;
-			}
-			case "8": {
-				System.exit(0);
-				break;
-			}
-			default:
-				
-			}
-			
 		}
 	}
 }
